@@ -1,71 +1,114 @@
 #include <iostream>
-#include <vector>
-#include <memory>
-#include "User.hpp"
-// #include "Client.hpp"
-// #include "Admin.hpp"
+#include <string>
+#include "../include/Admin.hpp"
+// #include "../include/Client.hpp"
 
-using namespace std;
+void adminMenu(Admin &admin)
+{
+    int choice;
+    do
+    {
+        std::cout << "\n--- Admin Menu ---\n";
+        std::cout << "1. Add Flight\n";
+        std::cout << "2. Remove Flight\n";
+        std::cout << "3. Edit Flight\n";
+        std::cout << "4. View Bookings\n";
+        std::cout << "5. View All Flights\n";
+        std::cout << "0. Logout\n";
+        std::cout << "Enter choice: ";
+        std::cin >> choice;
 
-void showMainMenu() {
-    cout << "\n======= Flight Reservation System =======\n";
-    cout << "1. Login as Client\n";
-    cout << "2. Login as Admin\n";
-    cout << "3. Exit\n";
-    cout << "Choose your option: ";
+        switch (choice)
+        {
+        case 1:
+            admin.addFlight();
+            break;
+        case 2:
+            admin.removeFlight();
+            break;
+        case 3:
+            admin.editFlight();
+            break;
+        case 4:
+            admin.viewBookings();
+            break;
+        case 5:
+            admin.viewAllFlights();
+            break;
+        case 0:
+            admin.logout();
+            break;
+        default:
+            std::cout << "Invalid choice!\n";
+            break;
+        }
+    } while (choice != 0);
 }
 
-int main() {
-    // Demo users
-    // vector<Client> clients = {
-    //     Client("john_doe", "1234", "john@example.com")
-    // };
+// void clientMenu(Client& client) {
+//     int choice;
+//     do {
+//         std::cout << "\n--- Client Menu ---\n";
+//         std::cout << "1. Search Flights\n";
+//         std::cout << "2. Book Flight\n";
+//         std::cout << "3. Cancel Booking\n";
+//         std::cout << "4. View Available Flights\n";
+//         std::cout << "0. Logout\n";
+//         std::cout << "Enter choice: ";
+//         std::cin >> choice;
 
-    // vector<Admin> admins = {
-    //     Admin("admin", "admin123", "admin@flights.com")
-    // };
+//         switch (choice) {
+//             case 1: client.searchFlights(); break;
+//             case 2: client.bookFlight(); break;
+//             case 3: client.cancelBooking(); break;
+//             case 4: client.viewAvailableFlights(); break;
+//             case 0: client.logout(); break;
+//             default: std::cout << "Invalid choice!\n"; break;
+//         }
+//     } while (choice != 0);
+// }
 
-    // int choice;
-    // while (true) {
-    //     showMainMenu();
-    //     cin >> choice;
+int main()
+{
+    int userType;
+    std::cout << "Welcome to the Flight Reservation System\n";
+    std::cout << "1. Admin Login\n";
+    std::cout << "2. Client Login\n";
+    std::cout << "Enter your choice: ";
+    std::cin >> userType;
 
-    //     if (choice == 3) {
-    //         cout << "Exiting system. Thank you!\n";
-    //         break;
-    //     }
+    std::string username, password, email;
+    std::cout << "Username: ";
+    std::cin >> username;
+    std::cout << "Password: ";
+    std::cin >> password;
 
-    //     string uname, pass;
-    //     cout << "Username: ";
-    //     cin >> uname;
-    //     cout << "Password: ";
-    //     cin >> pass;
-
-    //     bool loggedIn = false;
-
-    //     if (choice == 1) {
-    //         for (auto& c : clients) {
-    //             if (c.login(uname, pass)) {
-    //                 loggedIn = true;
-    //                 c.clientMenu(); // show client options
-    //                 break;
-    //             }
-    //         }
-    //         if (!loggedIn) cout << "Invalid client credentials.\n";
-
-    //     } else if (choice == 2) {
-    //         for (auto& a : admins) {
-    //             if (a.login(uname, pass)) {
-    //                 loggedIn = true;
-    //                 a.adminMenu(); // show admin options
-    //                 break;
-    //             }
-    //         }
-    //         if (!loggedIn) cout << "Invalid admin credentials.\n";
-    //     } else {
-    //         cout << "Invalid option.\n";
-    //     }
+    if (userType == 1)
+    {
+        Admin admin(username, password);
+        if (admin.login(username, password))
+        {
+            std::cout << "Admin Login Successful!\n";
+            adminMenu(admin);
+        }
+        else
+        {
+            std::cout << "Admin login failed.\n";
+        }
+    }
+    // else if (userType == 2) {
+    // Client client(username, password);
+    // if (client.login(username, password)) {
+    //     std::cout << "Client Login Successful!\n";
+    //     clientMenu(client);
+    // } else {
+    //     std::cout << "Client login failed.\n";
     // }
+    // }
+    else
+    {
+        std::cout << "Invalid user type.\n";
+    }
 
     return 0;
 }
