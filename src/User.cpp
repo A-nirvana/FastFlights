@@ -1,4 +1,4 @@
-#include "User.hpp"
+#include "../include/User.hpp"
 
 // Constructor: Initializes the user with a username, password, and email.
 User::User(const std::string& username, const std::string& password, const std::string& email)
