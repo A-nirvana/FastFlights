@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include "../include/Admin.hpp"
-// #include "../include/Client.hpp"
+#include "Admin.hpp"
+#include "Client.hpp"
 
 void adminMenu(Admin &admin)
 {
@@ -96,15 +96,36 @@ int main()
             std::cout << "Admin login failed.\n";
         }
     }
-    // else if (userType == 2) {
-    // Client client(username, password);
-    // if (client.login(username, password)) {
-    //     std::cout << "Client Login Successful!\n";
-    //     clientMenu(client);
-    // } else {
-    //     std::cout << "Client login failed.\n";
-    // }
-    // }
+    else if (userType == 2) {
+        Client client(username, password);
+        if (client.login(username, password)) {
+            std::cout << "Client Login Successful!\n";
+    
+            int choice;
+            do {
+                std::cout << "\n--- Client Menu ---\n";
+                std::cout << "1. Search Flights\n";
+                std::cout << "2. Book Flight\n";
+                std::cout << "3. Cancel Booking\n";
+                std::cout << "4. View Available Flights\n";
+                std::cout << "0. Logout\n";
+                std::cout << "Enter choice: ";
+                std::cin >> choice;
+    
+                switch (choice) {
+                    case 1: client.searchFlights(); break;
+                    case 2: client.bookFlight(); break;
+                    case 3: client.cancelBooking(); break;
+                    case 4: client.viewAvailableFlights(); break;
+                    case 0: client.logout(); break;
+                    default: std::cout << "Invalid choice!\n"; break;
+                }
+            } while (choice != 0);
+        } else {
+            std::cout << "Client login failed.\n";
+        }
+    }
+    
     else
     {
         std::cout << "Invalid user type.\n";

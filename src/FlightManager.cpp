@@ -1,4 +1,4 @@
-#include "../include/FlightManager.hpp"
+#include "FlightManager.hpp"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -75,4 +75,8 @@ void FlightManager::displayAllFlights() const {
         std::cout << "---------------------------\n";
     }
 }
+const std::vector<Flight>& FlightManager::getAllFlights() const {
+    return flights;
+}
+
 

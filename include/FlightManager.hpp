@@ -13,7 +13,7 @@ public:
 
     void loadFlightsFromFile(const std::string& filename);
     void saveFlightsToFile(const std::string& filename);
-
+    const std::vector<Flight>& getAllFlights() const;
     void addFlight(const Flight& flight);
     void removeFlight(const std::string& flightID);
     Flight* getFlightByID(const std::string& flightID);
