@@ -12,20 +12,22 @@ void FlightManager::loadFlightsFromFile(const std::string& filename) {
     flights.clear();
     while (getline(file, line)) {
         std::stringstream ss(line);
-        std::string id, from, to, time;
+        std::string id, from, to, time, arrival, dur;
         int total, available, prc;
 
         getline(ss, id, ',');
         getline(ss, from, ',');
         getline(ss, to, ',');
         getline(ss, time, ',');
+        getline(ss, arrival, ',');
+        getline(ss, dur, ',');
         ss >> total;
         ss.ignore(); 
         ss >> available;
         ss.ignore(); 
         ss >> prc;
 
-        flights.emplace_back(id, from, to, time, total, available,prc);
+        flights.emplace_back(id, from, to, time, arrival, dur, total, available,prc);
     }
 
     file.close();
@@ -39,6 +41,8 @@ void FlightManager::saveFlightsToFile(const std::string& filename) {
              << flight.getOrigin() << ","
              << flight.getDestination() << ","
              << flight.getDeparatureTime() << ","
+             << flight.getArrivalTime() << ","
+             << flight.getDuration() << ","
              << flight.getTotalSeats() << ","
              << flight.getAvailableSeats() << ","
              << flight.getPrice() << "\n";

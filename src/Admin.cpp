@@ -30,7 +30,7 @@ void Admin::logout()
 
 void Admin::addFlight()
 {
-    std::string id, from, to, time;
+    std::string id, from, to, time, arrival, dur;
     int total, price;
 
     cout << "Flight ID: ";
@@ -42,12 +42,16 @@ void Admin::addFlight()
     cout << "Departure Time: ";
     std::cin.ignore();
     getline(std::cin, time);
+    cout << "Arrival Time: ";
+    getline(std::cin, arrival);
+    cout << "Duration: ";
+    getline(std::cin, dur);
     cout << "Total Seats: ";
     std::cin >> total;
     cout << "Price: ";
     std::cin >> price;
 
-    Flight newFlight(id, from, to, time, total, total, price);
+    Flight newFlight(id, from, to, time, arrival, dur, total, total, price);
     manager.addFlight(newFlight);
     manager.saveFlightsToFile("data/flights.csv");
 
@@ -75,15 +79,21 @@ void Admin::editFlight()
     Flight *flight = manager.getFlightByID(id);
     if (flight)
     {
-        string time;
+        string time, arrival, dur;
         int seats;
         cout << "New Departure Time: ";
         cin.ignore();
         getline(std::cin, time);
+        cout << "Arrival Time: ";
+        std::cin.ignore();
+        getline(std::cin, arrival);
+        cout << "Duration: ";
+        std::cin.ignore();
+        getline(std::cin, dur);
         cout << "New Available Seats: ";
         cin >> seats;
 
-        *flight = Flight(flight->getFlightID(), flight->getOrigin(), flight->getDestination(), time, flight->getTotalSeats(), seats, flight->getPrice());
+        *flight = Flight(flight->getFlightID(), flight->getOrigin(), flight->getDestination(), time, arrival, dur, flight->getTotalSeats(), seats, flight->getPrice());
         manager.saveFlightsToFile("data/flights.csv");
 
         cout << "Flight updated.\n";
@@ -108,7 +118,7 @@ void Admin::viewBookings()
 
 void Admin::viewAllFlights()
 {
-    cout << "All Flights:\n";
+    cout << "All Flights:\n\n";
     manager.displayAllFlights();
     cout << "\n";
 }
