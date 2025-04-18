@@ -18,6 +18,7 @@ public:
     void removeFlight(const std::string& flightID);
     Flight* getFlightByID(const std::string& flightID);
     void displayAllFlights() const;
+    void loadReservationsToUpdateSeats(const std::string& filename);
 };
 
 #endif

@@ -8,6 +8,7 @@ Admin::Admin(const std::string &uname, const std::string &pass, const std::strin
     : User(uname, pass, mail)
 {
     manager.loadFlightsFromFile("data/flights.csv");
+    manager.loadReservationsToUpdateSeats("data/reservations.csv");
 }
 
 bool Admin::login(const std::string &uname, const std::string &pass)

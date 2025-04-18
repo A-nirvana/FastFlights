@@ -45,29 +45,6 @@ void adminMenu(Admin &admin)
     } while (choice != 0);
 }
 
-// void clientMenu(Client& client) {
-//     int choice;
-//     do {
-//         std::cout << "\n--- Client Menu ---\n";
-//         std::cout << "1. Search Flights\n";
-//         std::cout << "2. Book Flight\n";
-//         std::cout << "3. Cancel Booking\n";
-//         std::cout << "4. View Available Flights\n";
-//         std::cout << "0. Logout\n";
-//         std::cout << "Enter choice: ";
-//         std::cin >> choice;
-
-//         switch (choice) {
-//             case 1: client.searchFlights(); break;
-//             case 2: client.bookFlight(); break;
-//             case 3: client.cancelBooking(); break;
-//             case 4: client.viewAvailableFlights(); break;
-//             case 0: client.logout(); break;
-//             default: std::cout << "Invalid choice!\n"; break;
-//         }
-//     } while (choice != 0);
-// }
-
 int main()
 {
     int userType;
@@ -96,36 +73,58 @@ int main()
             std::cout << "Admin login failed.\n";
         }
     }
-    else if (userType == 2) {
+    else if (userType == 2)
+    {
         Client client(username, password);
-        if (client.login(username, password)) {
+        if (client.login(username, password))
+        {
             std::cout << "Client Login Successful!\n";
-    
+
             int choice;
-            do {
+            do
+            {
                 std::cout << "\n--- Client Menu ---\n";
                 std::cout << "1. Search Flights\n";
                 std::cout << "2. Book Flight\n";
                 std::cout << "3. Cancel Booking\n";
                 std::cout << "4. View Available Flights\n";
+                std::cout << "5. View My Reservations\n"; // ✅ Added this
                 std::cout << "0. Logout\n";
                 std::cout << "Enter choice: ";
                 std::cin >> choice;
-    
-                switch (choice) {
-                    case 1: client.searchFlights(); break;
-                    case 2: client.bookFlight(); break;
-                    case 3: client.cancelBooking(); break;
-                    case 4: client.viewAvailableFlights(); break;
-                    case 0: client.logout(); break;
-                    default: std::cout << "Invalid choice!\n"; break;
+
+                switch (choice)
+                {
+                case 1:
+                    client.searchFlights();
+                    break;
+                case 2:
+                    client.bookFlight();
+                    break;
+                case 3:
+                    client.cancelBooking();
+                    break;
+                case 4:
+                    client.viewAvailableFlights();
+                    break;
+                case 5:
+                    client.viewReservations();
+                    break; // ✅ Connected it here
+                case 0:
+                    client.logout();
+                    break;
+                default:
+                    std::cout << "Invalid choice!\n";
+                    break;
                 }
             } while (choice != 0);
-        } else {
+        }
+        else
+        {
             std::cout << "Client login failed.\n";
         }
     }
-    
+
     else
     {
         std::cout << "Invalid user type.\n";

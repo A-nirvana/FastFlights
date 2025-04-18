@@ -83,4 +83,28 @@ const std::vector<Flight>& FlightManager::getAllFlights() const {
     return flights;
 }
 
+void FlightManager::loadReservationsToUpdateSeats(const std::string& filename) {
+    std::ifstream file(filename);
+    std::string line;
+
+    while (getline(file, line)) {
+        std::stringstream ss(line);
+        std::string resID, username, flightID, date, seatStr;
+
+        std::getline(ss, resID, ',');
+        std::getline(ss, username, ',');
+        std::getline(ss, flightID, ',');
+        std::getline(ss, date, ',');
+        std::getline(ss, seatStr, ',');
+
+        Flight* flight = getFlightByID(flightID);
+        if (flight) {
+            flight->assignSeatOnDate(date);  // Updates seat tracking for that date
+        }
+    }
+
+    file.close();
+}
+
+
 
