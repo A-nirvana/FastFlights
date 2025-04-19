@@ -6,6 +6,7 @@
 #include <iomanip> // for std::setw, std::setfill
 #include <chrono>
 #include <ctime>
+
 using namespace std;
 
 std::string getFormattedDateInput()
@@ -15,7 +16,7 @@ std::string getFormattedDateInput()
     std::cout << "Enter Year (e.g., 2025): ";
     std::cin >> year;
 
-    std::cout << "Enter Month (1–12): ";
+    std::cout << "Enter Month (1-12): ";
     std::cin >> month;
     if (month < 1 || month > 12)
     {
@@ -23,7 +24,7 @@ std::string getFormattedDateInput()
         return "";
     }
 
-    std::cout << "Enter Day (1–31): ";
+    std::cout << "Enter Day (1-31): ";
     std::cin >> day;
 
     // Construct the date string in YYYY-MM-DD format
@@ -74,6 +75,56 @@ void printTicket(const Reservation& res, const Flight& flight, bool pause = true
         std::cout << "\nPress Enter to continue...";
         std::cin.ignore();
         std::cin.get();
+    }
+}
+
+bool Client::registerClient()
+{
+    std::string uname, pass;
+    std::cout << "Enter a username: ";
+    std::cin >> uname;
+    std::cout << "Enter a password: ";
+    std::cin >> pass;
+
+    // Check if user already exists
+    std::ifstream infile("data/clients.txt");
+    std::string line, existingUname, existingPass;
+    bool userExists = false;
+
+    while (getline(infile, line))
+    {
+        std::istringstream iss(line);
+        iss >> existingUname >> existingPass;
+
+        if (existingUname == uname)
+        {
+            userExists = true;
+            break;
+        }
+    }
+    infile.close();
+
+    if (userExists)
+    {
+        std::cout << "Username already exists.\n";
+        return false;
+    }
+
+    // Append new user
+    std::ofstream outfile("data/clients.txt", std::ios::app);
+  
+    if (outfile.is_open())
+    {
+        outfile << uname << " " << pass << "\n";
+        outfile.close();
+        std::cout << "Client registered successfully.\n";
+        return true;
+        
+    }
+    else
+    {
+        std::cerr << "Error opening clients.txt for writing.\n";
+        return false;
     }
 }
 
@@ -212,13 +263,15 @@ Client::Client(const std::string &uname, const std::string &pass)
     manager.loadReservationsToUpdateSeats("data/reservations.csv");
 }
 
+
+
 bool Client::login(const std::string &uname, const std::string &pass)
 {
     ifstream file("data/clients.txt");
     string u, p;
     while (file >> u >> p)
     {
-        if (u == uname && p == pass)
+        if (u == uname && p==pass )
             return true;
     }
     return false;

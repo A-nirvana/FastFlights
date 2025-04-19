@@ -15,6 +15,7 @@ public:
     bool login(const std::string &uname, const std::string &pass) override;
     void logout() override;
 
+    static bool registerClient();
     void searchFlights();
     void bookFlight();
     void cancelBooking();

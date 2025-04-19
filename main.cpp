@@ -45,23 +45,67 @@ void adminMenu(Admin &admin)
     } while (choice != 0);
 }
 
+void clientMenu(Client &client)
+{
+    int choice;
+    do
+    {
+        std::cout << "\n--- Client Menu ---\n";
+        std::cout << "1. Search Flights\n";
+        std::cout << "2. Book Flight\n";
+        std::cout << "3. Cancel Booking\n";
+        std::cout << "4. View Available Flights\n";
+        std::cout << "5. View My Reservations\n";
+        std::cout << "0. Logout\n";
+        std::cout << "Enter choice: ";
+        std::cin >> choice;
+
+        switch (choice)
+        {
+        case 1:
+            client.searchFlights();
+            break;
+        case 2:
+            client.bookFlight();
+            break;
+        case 3:
+            client.cancelBooking();
+            break;
+        case 4:
+            client.viewAvailableFlights();
+            break;
+        case 5:
+            client.viewReservations();
+            break;
+        case 0:
+            client.logout();
+            break;
+        default:
+            std::cout << "Invalid choice!\n";
+            break;
+        }
+    } while (choice != 0);
+}
+
 int main()
 {
-    int userType;
+    int roleChoice;
     std::cout << "Welcome to the Flight Reservation System\n";
-    std::cout << "1. Admin Login\n";
-    std::cout << "2. Client Login\n";
+    std::cout << "Select role:\n";
+    std::cout << "1. Admin\n";
+    std::cout << "2. Client\n";
     std::cout << "Enter your choice: ";
-    std::cin >> userType;
+    std::cin >> roleChoice;
 
-    std::string username, password, email;
-    std::cout << "Username: ";
-    std::cin >> username;
-    std::cout << "Password: ";
-    std::cin >> password;
-
-    if (userType == 1)
+    if (roleChoice == 1) // Admin
     {
+        std::string username, password;
+        std::cout << "Admin Login\n";
+        std::cout << "Username: ";
+        std::cin >> username;
+        std::cout << "Password: ";
+        std::cin >> password;
+
         Admin admin(username, password);
         if (admin.login(username, password))
         {
@@ -73,61 +117,66 @@ int main()
             std::cout << "Admin login failed.\n";
         }
     }
-    else if (userType == 2)
+    else if (roleChoice == 2) // Client
     {
-        Client client(username, password);
-        if (client.login(username, password))
+        int clientAction;
+        std::cout << "1. Login\n";
+        std::cout << "2. Register\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> clientAction;
+
+        if (clientAction == 1) // Client Login
         {
-            std::cout << "Client Login Successful!\n";
+            std::string username, password;
+            std::cout << "Client Login\n";
+            std::cout << "Username: ";
+            std::cin >> username;
+            std::cout << "Password: ";
+            std::cin >> password;
 
-            int choice;
-            do
+            Client client(username, password);
+            if (client.login(username, password))
             {
-                std::cout << "\n--- Client Menu ---\n";
-                std::cout << "1. Search Flights\n";
-                std::cout << "2. Book Flight\n";
-                std::cout << "3. Cancel Booking\n";
-                std::cout << "4. View Available Flights\n";
-                std::cout << "5. View My Reservations\n"; // ✅ Added this
-                std::cout << "0. Logout\n";
-                std::cout << "Enter choice: ";
-                std::cin >> choice;
+                std::cout << "Client Login Successful!\n";
+                clientMenu(client);
+            }
+            else
+            {
+                std::cout << "Client login failed.\n";
+            }
+        }
+        else if (clientAction == 2)
+        {
+            if (Client::registerClient())
+            {
+                std::cout << "Registration successful. You can now log in.\n";
+                std::string username, password;
+                std::cout << "Client Login\n";
+                std::cout << "Username: ";
+                std::cin >> username;
+                std::cout << "Password: ";
+                std::cin >> password;
 
-                switch (choice)
+                Client client(username, password);
+                if (client.login(username, password))
                 {
-                case 1:
-                    client.searchFlights();
-                    break;
-                case 2:
-                    client.bookFlight();
-                    break;
-                case 3:
-                    client.cancelBooking();
-                    break;
-                case 4:
-                    client.viewAvailableFlights();
-                    break;
-                case 5:
-                    client.viewReservations();
-                    break; // ✅ Connected it here
-                case 0:
-                    client.logout();
-                    break;
-                default:
-                    std::cout << "Invalid choice!\n";
-                    break;
+                    std::cout << "Client Login Successful!\n";
+                    clientMenu(client);
                 }
-            } while (choice != 0);
+                else
+                {
+                    std::cout << "Client login failed.\n";
+                }
+            }
         }
         else
         {
-            std::cout << "Client login failed.\n";
+            std::cout << "Invalid action.\n";
         }
     }
-
     else
     {
-        std::cout << "Invalid user type.\n";
+        std::cout << "Invalid role selected.\n";
     }
 
     return 0;

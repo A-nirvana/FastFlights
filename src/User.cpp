@@ -47,6 +47,7 @@ bool User::login(const std::string& inputUsername, const std::string& inputPassw
     }
 }
 
+
 // Logout function: for this example it simply outputs a message.
 void User::logout() {
     std::cout << "User " << username << " has logged out." << std::endl;

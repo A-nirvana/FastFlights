@@ -17,7 +17,7 @@ bool Admin::login(const std::string &uname, const std::string &pass)
     string u, p;
     while (file >> u >> p)
     {
-        if (u == uname && p == pass)
+        if (u == uname && p==pass)
             return true;
     }
     return false;
