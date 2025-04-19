@@ -1,4 +1,5 @@
 #include "Admin.hpp"
+#include "HashUtil.hpp"
 #include <iostream>
 #include <fstream>
 
@@ -14,10 +15,12 @@ Admin::Admin(const std::string &uname, const std::string &pass, const std::strin
 bool Admin::login(const std::string &uname, const std::string &pass)
 {
     ifstream file("data/admins.txt");
-    string u, p;
+    std::string u, p;
+    std::string hashedInput = simpleHash(uname + pass); 
+
     while (file >> u >> p)
     {
-        if (u == uname && p==pass)
+        if (u == uname && p == hashedInput)
             return true;
     }
     return false;

@@ -1,4 +1,5 @@
 #include "../include/Client.hpp"
+#include "HashUtil.hpp"
 #include "../include/Reservation.hpp"
 #include <iostream>
 #include <fstream>
@@ -110,16 +111,17 @@ bool Client::registerClient()
         return false;
     }
 
-    // Append new user
+    // 🔐 Hash password with username as salt
+    std::string hashedPass = simpleHash(uname + pass);
+
+    // Append new user to file
     std::ofstream outfile("data/clients.txt", std::ios::app);
-  
     if (outfile.is_open())
     {
-        outfile << uname << " " << pass << "\n";
+        outfile << uname << " " << hashedPass << "\n";
         outfile.close();
         std::cout << "Client registered successfully.\n";
         return true;
-        
     }
     else
     {
@@ -267,11 +269,13 @@ Client::Client(const std::string &uname, const std::string &pass)
 
 bool Client::login(const std::string &uname, const std::string &pass)
 {
-    ifstream file("data/clients.txt");
-    string u, p;
+    std::ifstream file("data/clients.txt");
+    std::string u, p;
+    std::string hashedInput = simpleHash(uname + pass); 
+
     while (file >> u >> p)
     {
-        if (u == uname && p==pass )
+        if (u == uname && p == hashedInput)
             return true;
     }
     return false;

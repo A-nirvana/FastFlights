@@ -1,4 +1,5 @@
 #include "User.hpp"
+#include "HashUtil.hpp"
 
 // Constructor: Initializes the user with a username, password, and email.
 User::User(const std::string& username, const std::string& password, const std::string& email)
@@ -28,7 +29,17 @@ void User::setUsername(const std::string& username) {
 
 // Setter for password.
 void User::setPassword(const std::string& password) {
-    this->password = password;
+    this->password = simpleHash(username+password); // Hash the password before storing it.
+}
+// Login function: checks input credentials against stored credentials.
+bool User::login(const std::string& inputUsername, const std::string& inputPassword) {
+    if (inputUsername == username && simpleHash(inputUsername + inputPassword) == password) {
+        std::cout << "Login successful for user: " << username << std::endl;
+        return true;
+    } else {
+        std::cout << "Login failed for user: " << inputUsername << simpleHash(inputUsername + inputPassword) << std::endl;
+        return false;
+    }
 }
 
 // Setter for email.
@@ -36,16 +47,6 @@ void User::setEmail(const std::string& email) {
     this->email = email;
 }
 
-// Login function: checks input credentials against stored credentials.
-bool User::login(const std::string& inputUsername, const std::string& inputPassword) {
-    if (inputUsername == username && inputPassword == password) {
-        std::cout << "Login successful for user: " << username << std::endl;
-        return true;
-    } else {
-        std::cout << "Login failed for user: " << inputUsername << std::endl;
-        return false;
-    }
-}
 
 
 // Logout function: for this example it simply outputs a message.
