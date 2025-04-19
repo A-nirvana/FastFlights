@@ -1,12 +1,6 @@
- # Fastflights
- ## How to Use
-
-    Open PowerShell in the project root.
-
-    Run the build script:
-
-./build.ps1
-
-If build is successful, run the project:
-
-./run.ps1
+# To run FastFlights use the following commands
+### build -
+    - g++ -I./include -o FastFlights src/*.cpp  main.cpp
+### run -
+    - ./FastFlights.exe (for windows)
+    - ./FastFLights (for linux)
