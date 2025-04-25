@@ -13,7 +13,8 @@ void adminMenu(Admin &admin)
         std::cout << "2. Remove Flight\n";
         std::cout << "3. Edit Flight\n";
         std::cout << "4. View Bookings\n";
-        std::cout << "5. View All Flights\n";
+        std::cout << "5. View All Flights from an Origin\n";
+        std::cout << "6. View All Flights\n";
         std::cout << "0. Logout\n";
         std::cout << "Enter choice: ";
         std::cin >> choice;
@@ -33,6 +34,9 @@ void adminMenu(Admin &admin)
             admin.viewBookings();
             break;
         case 5:
+            admin.viewFlightFromAnOrigin();
+            break;
+        case 6:
             admin.viewAllFlights();
             break;
         case 0:

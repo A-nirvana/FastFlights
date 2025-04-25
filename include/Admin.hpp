@@ -19,6 +19,7 @@ public:
     void editFlight();
     void viewBookings(); 
     void viewAllFlights(); 
+    void viewFlightFromAnOrigin();
 };
 
 #endif

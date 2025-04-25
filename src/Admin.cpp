@@ -18,11 +18,11 @@ bool Admin::login(const string &uname, const string &pass)
 {
     ifstream file("data/admins.txt");
     std::string u, p;
-    std::string hashedInput = simpleHash(uname + pass); 
+    std::string hashedInput = simpleHash(uname + pass);
 
     while (file >> u >> p)
     {
-        if (u == uname && p==hashedInput)
+        if (u == uname && p == hashedInput)
             return true;
     }
     return false;
@@ -137,7 +137,6 @@ void Admin::editFlight()
         cin.ignore();
         getline(cin, time);
         cout << "Arrival Time: ";
-        cin.ignore();
         getline(cin, arrival);
         cout << "Duration: ";
         cin.ignore();
@@ -251,4 +250,31 @@ void Admin::viewAllFlights()
     cout << "All Flights:\n\n";
     manager.displayAllFlights();
     cout << "\n";
+}
+
+void Admin::viewFlightFromAnOrigin()
+{
+    string origin;
+    cout << "Enter origin: ";
+    cin >> origin;
+    cout << "\n";
+    bool found = manager.displayFlightsFromOriginSorted(origin);
+    cout << "\n";
+    if (found)
+    {
+        cout << "Do you want to edit any flight? (1 for Yes, 0 for No): ";
+        int choice;
+        cin >> choice;
+        if (choice == 1)
+        {
+            editFlight();
+        }
+        else
+        {
+            cout << "No flight edited.\n";
+        }
+    }
+
+    cout << "\n";
+    return;
 }
