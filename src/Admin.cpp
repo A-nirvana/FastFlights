@@ -1,23 +1,25 @@
 #include "Admin.hpp"
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <iomanip>
 
 using namespace std;
 
-Admin::Admin(const std::string &uname, const std::string &pass, const std::string &mail)
+Admin::Admin(const string &uname, const string &pass, const string &mail)
     : User(uname, pass, mail)
 {
     manager.loadFlightsFromFile("data/flights.csv");
     manager.loadReservationsToUpdateSeats("data/reservations.csv");
 }
 
-bool Admin::login(const std::string &uname, const std::string &pass)
+bool Admin::login(const string &uname, const string &pass)
 {
     ifstream file("data/admins.txt");
     string u, p;
     while (file >> u >> p)
     {
-        if (u == uname && p==pass)
+        if (u == uname && p == pass)
             return true;
     }
     return false;
@@ -31,26 +33,54 @@ void Admin::logout()
 
 void Admin::addFlight()
 {
-    std::string id, from, to, time, arrival, dur;
+    string id, from, to, time, arrival, dur;
     int total, price;
+    int flag = 0;
+    do
+    {
+        cout << "Flight ID: ";
+        cin >> id;
+        Flight *flight = manager.getFlightByID(id);
+        if (flight)
+        {
+            cout << "Flight ID already exists. Please enter a unique ID.\n";
+            flag = 1;
+            continue;
+        }
+        cout << "From: ";
+        cin >> from;
+        cout << "To: ";
+        cin >> to;
+        cout << "Departure Time: ";
+        cin.ignore();
+        getline(cin, time);
+        while (manager.isScheduledAtTheSameTime(from, time))
+        {
+            cout << "Another flight is already scheduled from " << from << " at this time. Please enter a different time: ";
+            getline(cin, time);
+        }
+        cout << "Arrival Time: ";
+        getline(cin, arrival);
+        cout << "Duration: ";
+        getline(cin, dur);
+        cout << "Total Seats: ";
+        cin >> total;
+        cout << "Price: ";
+        cin >> price;
+        flag = 0;
+        if (manager.hasScheduleConflict(from, to, time))
+        {
+            cout << "A flight with the same route and time already exists.\n";
+            cout << "Enter 1 to try again: ";
+            cin >> flag;
+            if (flag != 1)
+            {
+                cout << "Flight not added.\n";
+                return;
+            }
+        }
 
-    cout << "Flight ID: ";
-    std::cin >> id;
-    cout << "From: ";
-    std::cin >> from;
-    cout << "To: ";
-    std::cin >> to;
-    cout << "Departure Time: ";
-    std::cin.ignore();
-    getline(std::cin, time);
-    cout << "Arrival Time: ";
-    getline(std::cin, arrival);
-    cout << "Duration: ";
-    getline(std::cin, dur);
-    cout << "Total Seats: ";
-    std::cin >> total;
-    cout << "Price: ";
-    std::cin >> price;
+    } while (flag);
 
     Flight newFlight(id, from, to, time, arrival, dur, total, total, price);
     manager.addFlight(newFlight);
@@ -64,7 +94,22 @@ void Admin::removeFlight()
     string id;
     cout << "Enter Flight ID to remove: ";
     cin >> id;
-
+    Flight *flight = manager.getFlightByID(id);
+    if (!flight)
+    {
+        cout << "Flight not found.\n";
+        return;
+    }
+    cout << "Flight Details:\n";
+    flight->displayFlight();
+    cout << "Enter 1 to confirm: ";
+    int confirm;
+    cin >> confirm;
+    if (confirm != 1)
+    {
+        cout << "Flight not removed.\n";
+        return;
+    }
     manager.removeFlight(id);
     manager.saveFlightsToFile("data/flights.csv");
 
@@ -80,21 +125,24 @@ void Admin::editFlight()
     Flight *flight = manager.getFlightByID(id);
     if (flight)
     {
+        cout << "Current Flight Details:\n";
+        flight->displayFlight();
+        cout << "\nEnter new details:\n";
         string time, arrival, dur;
-        int seats;
+        int price;
         cout << "New Departure Time: ";
         cin.ignore();
-        getline(std::cin, time);
+        getline(cin, time);
         cout << "Arrival Time: ";
-        std::cin.ignore();
-        getline(std::cin, arrival);
+        cin.ignore();
+        getline(cin, arrival);
         cout << "Duration: ";
-        std::cin.ignore();
-        getline(std::cin, dur);
-        cout << "New Available Seats: ";
-        cin >> seats;
+        cin.ignore();
+        getline(cin, dur);
+        cout << "New Price: ";
+        cin >> price;
 
-        *flight = Flight(flight->getFlightID(), flight->getOrigin(), flight->getDestination(), time, arrival, dur, flight->getTotalSeats(), seats, flight->getPrice());
+        *flight = Flight(flight->getFlightID(), flight->getOrigin(), flight->getDestination(), time, arrival, dur, flight->getTotalSeats(), flight->getTotalSeats(), price);
         manager.saveFlightsToFile("data/flights.csv");
 
         cout << "Flight updated.\n";
@@ -107,14 +155,92 @@ void Admin::editFlight()
 
 void Admin::viewBookings()
 {
-    ifstream file("data/reservations.csv");
-    string line;
-    cout << "All Reservations:\n";
-    while (getline(file, line))
+    ifstream resFile("data/reservations.csv");
+    if (!resFile.is_open())
     {
-        cout << line << "\n";
+        cout << "Error opening reservations.csv\n";
+        return;
     }
-    file.close();
+
+    // Load flight data
+    ifstream flightFile("data/flights.csv");
+    vector<Flight> flightList;
+    string fline;
+
+    while (getline(flightFile, fline))
+    {
+        stringstream ss(fline);
+        string id, from, to, time, arrival, dur;
+        int total, available, price;
+
+        getline(ss, id, ',');
+        getline(ss, from, ',');
+        getline(ss, to, ',');
+        getline(ss, time, ',');
+        getline(ss, arrival, ',');
+        getline(ss, dur, ',');
+        ss >> total;
+        ss.ignore();
+        ss >> available;
+        ss >> price;
+
+        flightList.emplace_back(id, from, to, time, arrival, dur, total, available, price);
+    }
+
+    flightFile.close();
+    cout << endl;
+    cout << "All Bookings:\n\n";
+    // Header
+    cout << left
+         << setw(18) << "Reservation ID"
+         << setw(15) << "User"
+         << setw(12) << "Flight ID"
+         << setw(20) << "Departure Time"
+         << setw(20) << "Route"
+         << setw(10) << "Seat"
+         << "\n";
+
+    cout << string(90, '-') << "\n";
+
+    // Read each booking
+    string rline;
+    while (getline(resFile, rline))
+    {
+        stringstream ss(rline);
+        string resID, user, flightID, date;
+        int seat;
+
+        getline(ss, resID, ',');
+        getline(ss, user, ',');
+        getline(ss, flightID, ',');
+        getline(ss, date, ',');
+        ss >> seat;
+
+        // Find the flight
+        string origin = "N/A", dest = "N/A", departure = "N/A";
+        for (const auto &f : flightList)
+        {
+            if (f.getFlightID() == flightID)
+            {
+                origin = f.getOrigin();
+                dest = f.getDestination();
+                departure = f.getDeparatureTime();
+                break;
+            }
+        }
+
+        // Display row
+        cout << left
+             << setw(18) << resID
+             << setw(15) << user
+             << setw(12) << flightID
+             << setw(20) << departure
+             << setw(20) << (origin + " -> " + dest)
+             << setw(10) << seat
+             << "\n";
+    }
+
+    resFile.close();
 }
 
 void Admin::viewAllFlights()

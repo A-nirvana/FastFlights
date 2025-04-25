@@ -16,9 +16,10 @@ int Flight::getTotalSeats() const { return totalSeats; }
 int Flight::getAvailableSeats() const { return availableSeats; }
 int Flight::getPrice() const { return price; }
 
-
-int Flight::assignSeat() {
-    if (availableSeats > 0) {
+int Flight::assignSeat()
+{
+    if (availableSeats > 0)
+    {
         --availableSeats;
         return totalSeats - availableSeats; // Simple seat assignment logic
     }
@@ -43,15 +44,19 @@ void Flight::displayFlight() const
               << "\nPrice: " << price << "\n";
 }
 
-int Flight::assignSeatOnDate(const std::string& date) {
-    auto& seatMap = seatMapByDate[date];
+int Flight::assignSeatOnDate(const std::string &date)
+{
+    auto &seatMap = seatMapByDate[date];
 
-    if (seatMap.empty()) {
-        seatMap.resize(totalSeats, false);  // all seats initially unbooked
+    if (seatMap.empty())
+    {
+        seatMap.resize(totalSeats, false); // all seats initially unbooked
     }
 
-    for (int i = 0; i < totalSeats; ++i) {
-        if (!seatMap[i]) {
+    for (int i = 0; i < totalSeats; ++i)
+    {
+        if (!seatMap[i])
+        {
             seatMap[i] = true;
             return i + 1; // seat numbers start at 1
         }
@@ -60,21 +65,26 @@ int Flight::assignSeatOnDate(const std::string& date) {
     return -1; // no seats available
 }
 
-void Flight::cancelSeatOnDate(const std::string& date, int seatNumber) {
-    auto& seatMap = seatMapByDate[date];
-    if (seatNumber >= 1 && seatNumber <= totalSeats && seatMap.size() >= seatNumber) {
+void Flight::cancelSeatOnDate(const std::string &date, int seatNumber)
+{
+    auto &seatMap = seatMapByDate[date];
+    if (seatNumber >= 1 && seatNumber <= totalSeats && seatMap.size() >= seatNumber)
+    {
         seatMap[seatNumber - 1] = false;
     }
 }
 
-int Flight::getAvailableSeatsOnDate(const std::string& date) const {
+int Flight::getAvailableSeatsOnDate(const std::string &date) const
+{
     auto it = seatMapByDate.find(date);
-    if (it == seatMapByDate.end()) return totalSeats;
+    if (it == seatMapByDate.end())
+        return totalSeats;
 
     int available = 0;
-    for (bool booked : it->second) {
-        if (!booked) available++;
+    for (bool booked : it->second)
+    {
+        if (!booked)
+            available++;
     }
     return available;
 }
-

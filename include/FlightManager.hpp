@@ -19,6 +19,10 @@ public:
     Flight* getFlightByID(const std::string& flightID);
     void displayAllFlights() const;
     void loadReservationsToUpdateSeats(const std::string& filename);
+    bool hasScheduleConflict(const std::string& origin, const std::string& destination, const std::string& departureTime);
+    bool isScheduledAtTheSameTime(const std::string& origin, const std::string& departureTime);
+
+
 };
 
 #endif

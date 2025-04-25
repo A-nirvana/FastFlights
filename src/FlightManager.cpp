@@ -106,5 +106,26 @@ void FlightManager::loadReservationsToUpdateSeats(const std::string& filename) {
     file.close();
 }
 
+bool FlightManager::hasScheduleConflict(const std::string& origin, const std::string& destination, const std::string& departureTime) {
+    for (const auto& flight : flights) {
+        if (flight.getOrigin() == origin &&
+            flight.getDestination() == destination &&
+            flight.getDeparatureTime() == departureTime) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool FlightManager::isScheduledAtTheSameTime(const std::string& origin, const std::string& departureTime) {
+    for (const auto& flight : flights) {
+        if (flight.getOrigin() == origin &&
+            flight.getDeparatureTime() == departureTime) {
+            return true;
+        }
+    }
+    return false;
+}
+
 
 

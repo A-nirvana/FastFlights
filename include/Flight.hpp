@@ -23,6 +23,7 @@ private:
 
 public:
 	Flight(const string &id = "", const string &from = "", const string &to = "", const string &time = "", const string &arrival = "", const string &dur = "", int total = 0, int available = 0, int p = 0);
+	
 
 	string getFlightID() const;
 	string getOrigin() const;
@@ -39,9 +40,9 @@ public:
 	void cancelSeat();
 	void displayFlight() const;
 
-	int assignSeatOnDate(const std::string& date);
-    void cancelSeatOnDate(const std::string& date, int seatNumber);
-    int getAvailableSeatsOnDate(const std::string& date) const;
+	int assignSeatOnDate(const std::string &date);
+	void cancelSeatOnDate(const std::string &date, int seatNumber);
+	int getAvailableSeatsOnDate(const std::string &date) const;
 };
 
 #endif
