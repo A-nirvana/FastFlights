@@ -144,25 +144,18 @@ void Client::bookFlight()
         return;
 
     vector<const Flight *> matches;
+    bool found = manager.displayFlightsFromOriginToDestinationSorted(from, to, date);
 
-    for (auto &flight : manager.getAllFlights())
-    {
-        if (flight.getOrigin() == from && flight.getDestination() == to)
-        {
-            flight.displayFlight();
-            cout << "Seats on " << date << ": " << flight.getAvailableSeatsOnDate(date) << endl;
-            matches.push_back(&flight);
-        }
-    }
+   
 
-    if (matches.empty())
+    if (!found)
     {
         cout << "No flights found.\n";
         return;
     }
 
     string flightID;
-    cout << "Enter Flight ID to book: ";
+    cout << "\nEnter Flight ID to book: ";
     cin >> flightID;
 
     Flight *selected = manager.getFlightByID(flightID);
@@ -293,16 +286,25 @@ void Client::searchFlights()
     cin >> from;
     cout << "To: ";
     cin >> to;
+    cout<<"Date (YYYY-MM-DD): ";
+    string date;
+    cin >> date;
 
     cout << "Matching Flights:\n";
-    for (const auto &flight : manager.getAllFlights())
+    bool found = manager.displayFlightsFromOriginToDestinationSorted(from, to, date);
+
+    
+    if(!found)
     {
-        if (flight.getOrigin() == from && flight.getDestination() == to)
-        {
-            flight.displayFlight();
-            cout << "----------------------\n";
-        }
+        cout << "No flights found.\n";
     }
+    else
+    {
+        cout << "\nPress Enter to continue...";
+        cin.ignore();
+        cin.get();
+    }
+    
 }
 
 void Client::viewAvailableFlights()

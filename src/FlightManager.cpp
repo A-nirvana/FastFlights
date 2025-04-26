@@ -225,3 +225,50 @@ bool FlightManager::displayFlightsFromOriginSorted(const string &origin)
     }
     return true;
 }
+
+bool FlightManager::displayFlightsFromOriginToDestinationSorted(const string &origin, const string &destination, const std::string &date = "")
+{
+    vector<Flight> filtered;
+
+    // Step 1: Filter flights by origin
+    for (const auto &flight : flights)
+    {
+        if (flight.getOrigin() == origin && flight.getDestination() == destination)
+        {
+            filtered.push_back(flight);
+        }
+    }
+
+    if (filtered.empty())
+    {
+        cout << "No flights found from " << origin << " to "<<destination<<".\n";
+        return false;
+    }
+
+    sort(filtered.begin(), filtered.end(), [](const Flight &a, const Flight &b)
+         { return a.getDeparatureTime() < b.getDeparatureTime(); });
+
+    cout << left
+         << setw(12) << "Flight ID"
+         << setw(15) << "Origin"
+         << setw(15) << "Destination"
+         << setw(20) << "Departure Time"
+         << setw(20) << "Arrival Time"
+         << setw(20) << "Available Seats on " << date
+         << "\n";
+
+    cout << string(100, '-') << "\n";
+
+    for (const auto &flight : filtered)
+    {
+        cout << left
+             << setw(12) << flight.getFlightID()
+             << setw(15) << flight.getOrigin()
+             << setw(15) << flight.getDestination()
+             << setw(20) << flight.getDeparatureTime()
+             << setw(20) << flight.getArrivalTime()
+             << setw(20) << flight.getAvailableSeatsOnDate(date)
+             << "\n";
+    }
+    return true;
+}

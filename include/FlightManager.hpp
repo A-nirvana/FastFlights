@@ -22,6 +22,7 @@ public:
     bool hasScheduleConflict(const std::string& origin, const std::string& destination, const std::string& departureTime);
     bool isScheduledAtTheSameTime(const std::string& origin, const std::string& departureTime);
     bool displayFlightsFromOriginSorted(const std::string& origin);
+    bool displayFlightsFromOriginToDestinationSorted(const std::string& origin, const std::string& destination, const std::string &date);
 
 
 
