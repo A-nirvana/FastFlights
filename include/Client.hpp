@@ -4,15 +4,17 @@
 #include "User.hpp"
 #include "FlightManager.hpp"
 
+using namespace std;
+
 class Client : public User
 {
 private:
     FlightManager manager;
 
 public:
-    Client(const std::string &uname, const std::string &pass);
+    Client(const string &uname, const string &pass);
 
-    bool login(const std::string &uname, const std::string &pass) override;
+    bool login(const string &uname, const string &pass) override;
     void logout() override;
 
     static bool registerClient();

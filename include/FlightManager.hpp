@@ -4,25 +4,28 @@
 #include <vector>
 #include "Flight.hpp"
 
+using namespace std;
+
 class FlightManager {
 private:
-    std::vector<Flight> flights;
+    vector<Flight> flights;
 
 public:
     FlightManager();
 
-    void loadFlightsFromFile(const std::string& filename);
-    void saveFlightsToFile(const std::string& filename);
-    const std::vector<Flight>& getAllFlights() const;
+    void loadFlightsFromFile(const string& filename);
+    void saveFlightsToFile(const string& filename);
+    const vector<Flight>& getAllFlights() const;
     void addFlight(const Flight& flight);
-    void removeFlight(const std::string& flightID);
-    Flight* getFlightByID(const std::string& flightID);
+    void removeFlight(const string& flightID);
+    Flight* getFlightByID(const string& flightID);
     void displayAllFlights() const;
     void loadReservationsToUpdateSeats(const std::string& filename);
     bool hasScheduleConflict(const std::string& origin, const std::string& destination, const std::string& departureTime);
     bool isScheduledAtTheSameTime(const std::string& origin, const std::string& departureTime);
     bool displayFlightsFromOriginSorted(const std::string& origin);
     bool displayFlightsFromOriginToDestinationSorted(const std::string& origin, const std::string& destination, const std::string &date);
+
 
 
 

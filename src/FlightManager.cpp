@@ -90,34 +90,37 @@ void FlightManager::displayAllFlights() const
 {
     if (flights.empty())
     {
-        std::cout << "No flights available.\n";
+        cout << "No flights available.\n";
         return;
     }
 
     // Print table header
-    std::cout << std::left
-              << std::setw(12) << "Flight ID"
-              << std::setw(15) << "Origin"
-              << std::setw(15) << "Destination"
-              << std::setw(20) << "Departure Time"
-              << std::setw(20) << "Arrival Time"
-              << std::setw(15) << "Total Seats"
-              << "\n";
+    cout << left
+         << setw(12) << "Flight ID"
+         << setw(15) << "Origin"
+         << setw(15) << "Destination"
+         << setw(20) << "Departure Time"
+         << setw(20) << "Arrival Time"
+         << setw(15) << "Total Seats"
+         << "\n";
 
-    std::cout << std::string(97, '-') << "\n";
+    cout << string(97, '-') << "\n";
 
     // Print each flight row
     for (const auto &flight : flights)
     {
-        std::cout << std::left
-                  << std::setw(12) << flight.getFlightID()
-                  << std::setw(15) << flight.getOrigin()
-                  << std::setw(15) << flight.getDestination()
-                  << std::setw(20) << flight.getDeparatureTime()
-                  << std::setw(20) << flight.getArrivalTime()
-                  << std::setw(15) << flight.getTotalSeats()
-                  << "\n";
+        cout << left
+             << setw(12) << flight.getFlightID()
+             << setw(15) << flight.getOrigin()
+             << setw(15) << flight.getDestination()
+             << setw(20) << flight.getDeparatureTime()
+             << setw(20) << flight.getArrivalTime()
+             << setw(15) << flight.getTotalSeats()
+             << "\n";
     }
+    cout << "\nPress Enter to continue...";
+    cin.ignore();
+    cin.get();
 }
 const vector<Flight> &FlightManager::getAllFlights() const
 {
@@ -193,6 +196,9 @@ bool FlightManager::displayFlightsFromOriginSorted(const string &origin)
     if (filtered.empty())
     {
         cout << "No flights found from " << origin << ".\n";
+        cout << "\nPress Enter to continue...";
+        cin.ignore();
+        cin.get();
         return false;
     }
 
@@ -223,6 +229,9 @@ bool FlightManager::displayFlightsFromOriginSorted(const string &origin)
              << setw(10) << flight.getAvailableSeats()
              << "\n";
     }
+    cout << "\nPress Enter to continue...";
+    cin.ignore();
+    cin.get();
     return true;
 }
 
@@ -241,7 +250,10 @@ bool FlightManager::displayFlightsFromOriginToDestinationSorted(const string &or
 
     if (filtered.empty())
     {
-        cout << "No flights found from " << origin << " to "<<destination<<".\n";
+        cout << "No flights found from " << origin << " to " << destination << ".\n";
+        cout << "\nPress Enter to continue...";
+        cin.ignore();
+        cin.get();
         return false;
     }
 
@@ -254,10 +266,11 @@ bool FlightManager::displayFlightsFromOriginToDestinationSorted(const string &or
          << setw(15) << "Destination"
          << setw(20) << "Departure Time"
          << setw(20) << "Arrival Time"
-         << setw(20) << "Available Seats on " << date
+         << setw(20) << "Available Seats "
+         << setw(10) << "Price "
          << "\n";
 
-    cout << string(100, '-') << "\n";
+    cout << string(110, '-') << "\n";
 
     for (const auto &flight : filtered)
     {
@@ -268,7 +281,11 @@ bool FlightManager::displayFlightsFromOriginToDestinationSorted(const string &or
              << setw(20) << flight.getDeparatureTime()
              << setw(20) << flight.getArrivalTime()
              << setw(20) << flight.getAvailableSeatsOnDate(date)
+             << setw(10) << flight.getPrice()
              << "\n";
     }
+    cout << "\nPress Enter to continue...";
+    cin.ignore();
+    cin.get();
     return true;
 }

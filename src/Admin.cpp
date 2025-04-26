@@ -17,8 +17,8 @@ Admin::Admin(const string &uname, const string &pass, const string &mail)
 bool Admin::login(const string &uname, const string &pass)
 {
     ifstream file("data/admins.txt");
-    std::string u, p;
-    std::string hashedInput = simpleHash(uname + pass);
+    string u, p;
+    string hashedInput = simpleHash(uname + pass);
 
     while (file >> u >> p)
     {
@@ -90,6 +90,9 @@ void Admin::addFlight()
     manager.saveFlightsToFile("data/flights.csv");
 
     cout << "Flight added successfully.\n";
+    cout << "\nPress Enter to continue...";
+    cin.ignore();
+    cin.get();
 }
 
 void Admin::removeFlight()
@@ -117,6 +120,9 @@ void Admin::removeFlight()
     manager.saveFlightsToFile("data/flights.csv");
 
     cout << "Flight removed.\n";
+    cout << "\nPress Enter to continue...";
+    cin.ignore();
+    cin.get();
 }
 
 void Admin::editFlight()
@@ -153,6 +159,9 @@ void Admin::editFlight()
     {
         cout << "Flight not found.\n";
     }
+    cout << "\nPress Enter to continue...";
+    cin.ignore();
+    cin.get();
 }
 
 void Admin::viewBookings()
@@ -161,6 +170,9 @@ void Admin::viewBookings()
     if (!resFile.is_open())
     {
         cout << "Error opening reservations.csv\n";
+        cout << "\nPress Enter to continue...";
+        cin.ignore();
+        cin.get();
         return;
     }
 
@@ -243,6 +255,9 @@ void Admin::viewBookings()
     }
 
     resFile.close();
+    cout << "\nPress Enter to continue...";
+    cin.ignore();
+    cin.get();
 }
 
 void Admin::viewAllFlights()
@@ -276,5 +291,6 @@ void Admin::viewFlightFromAnOrigin()
     }
 
     cout << "\n";
+
     return;
 }
