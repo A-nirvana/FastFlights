@@ -294,3 +294,123 @@ void Admin::viewFlightFromAnOrigin()
 
     return;
 }
+
+void Admin::exportBookingsReport()
+{
+    string source, destination;
+    cout << "Enter Source (Origin): ";
+    cin >> source;
+    cout << "Enter Destination: ";
+    cin >> destination;
+
+    ifstream flightFile("data/flights.csv");
+    if (!flightFile.is_open())
+    {
+        cout << "Error opening flights.csv.\n";
+        return;
+    }
+
+    vector<string> matchingFlights;
+    string line;
+    while (getline(flightFile, line))
+    {
+        stringstream ss(line);
+        string id, from, to, depTime;
+        int total, available;
+
+        getline(ss, id, ',');
+        getline(ss, from, ',');
+        getline(ss, to, ',');
+        getline(ss, depTime, ',');
+        ss >> total;
+        ss.ignore();
+        ss >> available;
+
+        if (from == source && to == destination)
+        {
+            matchingFlights.push_back(id);
+        }
+    }
+    flightFile.close();
+
+    if (matchingFlights.empty())
+    {
+        cout << "No flights found from " << source << " to " << destination << ".\n";
+        return;
+    }
+
+    cout << "\nAvailable Flights from " << source << " to " << destination << ":\n";
+    for (const auto &id : matchingFlights)
+    {
+        cout << "- " << id << "\n";
+    }
+
+    string selectedFlightID;
+    cout << "\nEnter Flight ID to export bookings for: ";
+    cin >> selectedFlightID;
+
+    string selectedDate;
+    cout << "Enter Date (YYYY-MM-DD): ";
+    cin >> selectedDate;
+
+    ifstream resFile("data/reservations.csv");
+    ofstream outFile("data/bookings_report.txt");
+
+    if (!resFile.is_open() || !outFile.is_open())
+    {
+        cout << "Error opening reservation files.\n";
+        return;
+    }
+
+    outFile << left
+            << setw(20) << "Reservation ID"
+            << setw(15) << "Username"
+            << setw(12) << "Flight ID"
+            << setw(20) << "Date"
+            << setw(10) << "Seat No"
+            << "\n";
+
+    outFile << string(77, '-') << "\n";
+
+    bool found = false;
+    while (getline(resFile, line))
+    {
+        stringstream ss(line);
+        string resID, username, flightID, date;
+        int seatNumber;
+
+        getline(ss, resID, ',');
+        getline(ss, username, ',');
+        getline(ss, flightID, ',');
+        getline(ss, date, ',');
+        ss >> seatNumber;
+
+        if (flightID == selectedFlightID && date == selectedDate)
+        {
+            found = true;
+            outFile << left
+                    << setw(20) << resID
+                    << setw(15) << username
+                    << setw(12) << flightID
+                    << setw(20) << date
+                    << setw(10) << seatNumber
+                    << "\n";
+        }
+    }
+
+    resFile.close();
+    outFile.close();
+
+    if (found)
+    {
+        cout << "\nBookings exported successfully to bookings_report.txt\n";
+    }
+    else
+    {
+        cout << "\nNo bookings found for flight " << selectedFlightID << " on " << selectedDate << ".\n";
+    }
+    cout << "\nPress Enter to continue...";
+    cin.ignore();
+    cin.get();
+    return;
+}
