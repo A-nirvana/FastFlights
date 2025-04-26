@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Flight::Flight(const std::string &id, const std::string &from, const std::string &to, const std::string &time, const string &arrival, const string &dur, int total, int available, int p)
+Flight::Flight(const string &id, const string &from, const string &to, const string &time, const string &arrival, const string &dur, int total, int available, int p)
     : flightID(id), origin(from), destination(to), departureTime(time), arrivalTime(arrival), duration(dur), totalSeats(total), availableSeats(available), price(p) {}
 
 string Flight::getFlightID() const { return flightID; }
@@ -34,7 +34,7 @@ void Flight::bookSeat()
 
 void Flight::displayFlight() const
 {
-    std::cout << "\n\nFlight ID: " << flightID
+    cout << "\n\nFlight ID: " << flightID
               << "\nFrom: " << origin
               << "\nTo: " << destination
               << "\nDeparture: " << departureTime
@@ -44,7 +44,7 @@ void Flight::displayFlight() const
               << "\nPrice: " << price << "\n";
 }
 
-int Flight::assignSeatOnDate(const std::string &date)
+int Flight::assignSeatOnDate(const string &date)
 {
     auto &seatMap = seatMapByDate[date];
 
@@ -65,7 +65,7 @@ int Flight::assignSeatOnDate(const std::string &date)
     return -1; // no seats available
 }
 
-void Flight::cancelSeatOnDate(const std::string &date, int seatNumber)
+void Flight::cancelSeatOnDate(const string &date, int seatNumber)
 {
     auto &seatMap = seatMapByDate[date];
     if (seatNumber >= 1 && seatNumber <= totalSeats && seatMap.size() >= seatNumber)
@@ -74,7 +74,7 @@ void Flight::cancelSeatOnDate(const std::string &date, int seatNumber)
     }
 }
 
-int Flight::getAvailableSeatsOnDate(const std::string &date) const
+int Flight::getAvailableSeatsOnDate(const string &date) const
 {
     auto it = seatMapByDate.find(date);
     if (it == seatMapByDate.end())

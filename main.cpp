@@ -8,16 +8,16 @@ void adminMenu(Admin &admin)
     int choice;
     do
     {
-        std::cout << "\n--- Admin Menu ---\n";
-        std::cout << "1. Add Flight\n";
-        std::cout << "2. Remove Flight\n";
-        std::cout << "3. Edit Flight\n";
-        std::cout << "4. View Bookings\n";
-        std::cout << "5. View All Flights from an Origin\n";
-        std::cout << "6. View All Flights\n";
-        std::cout << "0. Logout\n";
-        std::cout << "Enter choice: ";
-        std::cin >> choice;
+        cout << "\n--- Admin Menu ---\n";
+        cout << "1. Add Flight\n";
+        cout << "2. Remove Flight\n";
+        cout << "3. Edit Flight\n";
+        cout << "4. View Bookings\n";
+        cout << "5. View All Flights from an Origin\n";
+        cout << "6. View All Flights\n";
+        cout << "0. Logout\n";
+        cout << "Enter choice: ";
+        cin >> choice;
 
         switch (choice)
         {
@@ -43,7 +43,7 @@ void adminMenu(Admin &admin)
             admin.logout();
             break;
         default:
-            std::cout << "Invalid choice!\n";
+            cout << "Invalid choice!\n";
             break;
         }
     } while (choice != 0);
@@ -54,15 +54,15 @@ void clientMenu(Client &client)
     int choice;
     do
     {
-        std::cout << "\n--- Client Menu ---\n";
-        std::cout << "1. Search Flights\n";
-        std::cout << "2. Book Flight\n";
-        std::cout << "3. Cancel Booking\n";
-        std::cout << "4. View Available Flights\n";
-        std::cout << "5. View My Reservations\n";
-        std::cout << "0. Logout\n";
-        std::cout << "Enter choice: ";
-        std::cin >> choice;
+        cout << "\n--- Client Menu ---\n";
+        cout << "1. Search Flights\n";
+        cout << "2. Book Flight\n";
+        cout << "3. Cancel Booking\n";
+        cout << "4. View Available Flights\n";
+        cout << "5. View My Reservations\n";
+        cout << "0. Logout\n";
+        cout << "Enter choice: ";
+        cin >> choice;
 
         switch (choice)
         {
@@ -85,7 +85,7 @@ void clientMenu(Client &client)
             client.logout();
             break;
         default:
-            std::cout << "Invalid choice!\n";
+            cout << "Invalid choice!\n";
             break;
         }
     } while (choice != 0);
@@ -94,93 +94,93 @@ void clientMenu(Client &client)
 int main()
 {
     int roleChoice;
-    std::cout << "Welcome to the Flight Reservation System\n";
-    std::cout << "Select role:\n";
-    std::cout << "1. Admin\n";
-    std::cout << "2. Client\n";
-    std::cout << "Enter your choice: ";
-    std::cin >> roleChoice;
+    cout << "Welcome to the Flight Reservation System\n";
+    cout << "Select role:\n";
+    cout << "1. Admin\n";
+    cout << "2. Client\n";
+    cout << "Enter your choice: ";
+    cin >> roleChoice;
 
     if (roleChoice == 1) // Admin
     {
-        std::string username, password;
-        std::cout << "Admin Login\n";
-        std::cout << "Username: ";
-        std::cin >> username;
-        std::cout << "Password: ";
-        std::cin >> password;
+        string username, password;
+        cout << "Admin Login\n";
+        cout << "Username: ";
+        cin >> username;
+        cout << "Password: ";
+        cin >> password;
 
         Admin admin(username, password);
         if (admin.login(username, password))
         {
-            std::cout << "Admin Login Successful!\n";
+            cout << "Admin Login Successful!\n";
             adminMenu(admin);
         }
         else
         {
-            std::cout << "Admin login failed.\n";
+            cout << "Admin login failed.\n";
         }
     }
     else if (roleChoice == 2) // Client
     {
         int clientAction;
-        std::cout << "1. Login\n";
-        std::cout << "2. Register\n";
-        std::cout << "Enter your choice: ";
-        std::cin >> clientAction;
+        cout << "1. Login\n";
+        cout << "2. Register\n";
+        cout << "Enter your choice: ";
+        cin >> clientAction;
 
         if (clientAction == 1) // Client Login
         {
-            std::string username, password;
-            std::cout << "Client Login\n";
-            std::cout << "Username: ";
-            std::cin >> username;
-            std::cout << "Password: ";
-            std::cin >> password;
+            string username, password;
+            cout << "Client Login\n";
+            cout << "Username: ";
+            cin >> username;
+            cout << "Password: ";
+            cin >> password;
 
             Client client(username, password);
             if (client.login(username, password))
             {
-                std::cout << "Client Login Successful!\n";
+                cout << "Client Login Successful!\n";
                 clientMenu(client);
             }
             else
             {
-                std::cout << "Client login failed.\n";
+                cout << "Client login failed.\n";
             }
         }
         else if (clientAction == 2)
         {
             if (Client::registerClient())
             {
-                std::cout << "Registration successful. You can now log in.\n";
-                std::string username, password;
-                std::cout << "Client Login\n";
-                std::cout << "Username: ";
-                std::cin >> username;
-                std::cout << "Password: ";
-                std::cin >> password;
+                cout << "Registration successful. You can now log in.\n";
+                string username, password;
+                cout << "Client Login\n";
+                cout << "Username: ";
+                cin >> username;
+                cout << "Password: ";
+                cin >> password;
 
                 Client client(username, password);
                 if (client.login(username, password))
                 {
-                    std::cout << "Client Login Successful!\n";
+                    cout << "Client Login Successful!\n";
                     clientMenu(client);
                 }
                 else
                 {
-                    std::cout << "Client login failed.\n";
+                    cout << "Client login failed.\n";
                 }
             }
         }
         else
         {
-            std::cout << "Invalid action.\n";
+            cout << "Invalid action.\n";
         }
     }
     else
     {
-        std::cout << "Invalid role selected.\n";
+        cout << "Invalid role selected.\n";
     }
 
     return 0;

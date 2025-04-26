@@ -17,8 +17,8 @@ Admin::Admin(const string &uname, const string &pass, const string &mail)
 bool Admin::login(const string &uname, const string &pass)
 {
     ifstream file("data/admins.txt");
-    std::string u, p;
-    std::string hashedInput = simpleHash(uname + pass);
+    string u, p;
+    string hashedInput = simpleHash(uname + pass);
 
     while (file >> u >> p)
     {

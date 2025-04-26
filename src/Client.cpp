@@ -4,53 +4,51 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <iomanip> // for std::setw, std::setfill
+#include <iomanip> // for setw, setfill
 #include <chrono>
 #include <ctime>
 
-using namespace std;
-
-std::string getFormattedDateInput()
+string getFormattedDateInput()
 {
     int year, month, day;
 
-    std::cout << "Enter Year (e.g., 2025): ";
-    std::cin >> year;
+    cout << "Enter Year (e.g., 2025): ";
+    cin >> year;
 
-    std::cout << "Enter Month (1-12): ";
-    std::cin >> month;
+    cout << "Enter Month (1-12): ";
+    cin >> month;
     if (month < 1 || month > 12)
     {
-        std::cout << "❌ Invalid month entered.\n";
+        cout << "❌ Invalid month entered.\n";
         return "";
     }
 
-    std::cout << "Enter Day (1-31): ";
-    std::cin >> day;
+    cout << "Enter Day (1-31): ";
+    cin >> day;
 
     // Construct the date string in YYYY-MM-DD format
-    std::ostringstream dateStream;
+    ostringstream dateStream;
     dateStream << year << "-"
-               << std::setw(2) << std::setfill('0') << month << "-"
-               << std::setw(2) << std::setfill('0') << day;
-    std::string inputDate = dateStream.str();
+               << setw(2) << setfill('0') << month << "-"
+               << setw(2) << setfill('0') << day;
+    string inputDate = dateStream.str();
 
     // Get current time + 1 day
-    auto now = std::chrono::system_clock::now();
-    auto tomorrow = now + std::chrono::hours(24);
-    std::time_t t = std::chrono::system_clock::to_time_t(tomorrow);
-    std::tm *tmTomorrow = std::localtime(&t);
+    auto now = chrono::system_clock::now();
+    auto tomorrow = now + chrono::hours(24);
+    time_t t = chrono::system_clock::to_time_t(tomorrow);
+    tm *tmTomorrow = localtime(&t);
 
-    std::ostringstream tomorrowStream;
+    ostringstream tomorrowStream;
     tomorrowStream << (tmTomorrow->tm_year + 1900) << "-"
-                   << std::setw(2) << std::setfill('0') << (tmTomorrow->tm_mon + 1) << "-"
-                   << std::setw(2) << std::setfill('0') << tmTomorrow->tm_mday;
+                   << setw(2) << setfill('0') << (tmTomorrow->tm_mon + 1) << "-"
+                   << setw(2) << setfill('0') << tmTomorrow->tm_mday;
 
-    std::string minDate = tomorrowStream.str();
+    string minDate = tomorrowStream.str();
 
     if (inputDate < minDate)
     {
-        std::cout << "❌ Booking not allowed for today or past dates. Earliest allowed: " << minDate << "\n";
+        cout << "❌ Booking not allowed for today or past dates. Earliest allowed: " << minDate << "\n";
         return "";
     }
 
@@ -58,43 +56,43 @@ std::string getFormattedDateInput()
 }
 
 void printTicket(const Reservation& res, const Flight& flight, bool pause = true) {
-    std::cout << "===========================================\n";
-    std::cout << "         ✈️  FastFlights Boarding Pass ✈️\n";
-    std::cout << "===========================================\n";
-    std::cout << " Reservation ID : " << res.getReservationID() << "\n";
-    std::cout << " Passenger Name : " << res.getClientUsername() << "\n";
-    std::cout << " Flight ID      : " << res.getFlightID() << "\n";
-    std::cout << " Route          : " << flight.getOrigin() << " ➡ " << flight.getDestination() << "\n";
-    std::cout << " Date           : " << res.getDate() << "\n";
-    std::cout << " Departure Time : " << flight.getDeparatureTime() << "\n";
-    std::cout << " Seat Number    : " << res.getSeatNumber() << "\n";
-    std::cout << "===========================================\n";
-    std::cout << "     ✅ Please arrive 45 mins early.\n";
-    std::cout << "===========================================\n";
+    cout << "===========================================\n";
+    cout << "         ✈️  FastFlights Boarding Pass ✈️\n";
+    cout << "===========================================\n";
+    cout << " Reservation ID : " << res.getReservationID() << "\n";
+    cout << " Passenger Name : " << res.getClientUsername() << "\n";
+    cout << " Flight ID      : " << res.getFlightID() << "\n";
+    cout << " Route          : " << flight.getOrigin() << " ➡ " << flight.getDestination() << "\n";
+    cout << " Date           : " << res.getDate() << "\n";
+    cout << " Departure Time : " << flight.getDeparatureTime() << "\n";
+    cout << " Seat Number    : " << res.getSeatNumber() << "\n";
+    cout << "===========================================\n";
+    cout << "     ✅ Please arrive 45 mins early.\n";
+    cout << "===========================================\n";
 
     if (pause) {
-        std::cout << "\nPress Enter to continue...";
-        std::cin.ignore();
-        std::cin.get();
+        cout << "\nPress Enter to continue...";
+        cin.ignore();
+        cin.get();
     }
 }
 
 bool Client::registerClient()
 {
-    std::string uname, pass;
-    std::cout << "Enter a username: ";
-    std::cin >> uname;
-    std::cout << "Enter a password: ";
-    std::cin >> pass;
+    string uname, pass;
+    cout << "Enter a username: ";
+    cin >> uname;
+    cout << "Enter a password: ";
+    cin >> pass;
 
     // Check if user already exists
-    std::ifstream infile("data/clients.txt");
-    std::string line, existingUname, existingPass;
+    ifstream infile("data/clients.txt");
+    string line, existingUname, existingPass;
     bool userExists = false;
 
     while (getline(infile, line))
     {
-        std::istringstream iss(line);
+        istringstream iss(line);
         iss >> existingUname >> existingPass;
 
         if (existingUname == uname)
@@ -107,25 +105,25 @@ bool Client::registerClient()
 
     if (userExists)
     {
-        std::cout << "Username already exists.\n";
+        cout << "Username already exists.\n";
         return false;
     }
 
     // 🔐 Hash password with username as salt
-    std::string hashedPass = simpleHash(uname + pass);
+    string hashedPass = simpleHash(uname + pass);
 
     // Append new user to file
-    std::ofstream outfile("data/clients.txt", std::ios::app);
+    ofstream outfile("data/clients.txt", ios::app);
     if (outfile.is_open())
     {
         outfile << uname << " " << hashedPass << "\n";
         outfile.close();
-        std::cout << "Client registered successfully.\n";
+        cout << "Client registered successfully.\n";
         return true;
     }
     else
     {
-        std::cerr << "Error opening clients.txt for writing.\n";
+        cerr << "Error opening clients.txt for writing.\n";
         return false;
     }
 }
@@ -223,28 +221,28 @@ void Client::bookFlight()
 
 void Client::viewReservations()
 {
-    std::ifstream inFile("data/reservations.csv");
+    ifstream inFile("data/reservations.csv");
     if (!inFile.is_open())
     {
-        std::cout << "No reservations found.\n";
+        cout << "No reservations found.\n";
         return;
     }
 
-    std::string line;
+    string line;
     bool found = false;
-    while (std::getline(inFile, line))
+    while (getline(inFile, line))
     {
-        std::istringstream ss(line);
-        std::string resID, client, flightID, date, seatStr;
-        std::getline(ss, resID, ',');
-        std::getline(ss, client, ',');
-        std::getline(ss, flightID, ',');
-        std::getline(ss, date, ',');
-        std::getline(ss, seatStr, ',');
+        istringstream ss(line);
+        string resID, client, flightID, date, seatStr;
+        getline(ss, resID, ',');
+        getline(ss, client, ',');
+        getline(ss, flightID, ',');
+        getline(ss, date, ',');
+        getline(ss, seatStr, ',');
 
         if (client == username)
         {
-            std::cout << "Reservation ID: " << resID
+            cout << "Reservation ID: " << resID
                       << ", Flight ID: " << flightID
                       << ", Date: " << date
                       << ", Seat Number: " << seatStr << "\n";
@@ -254,11 +252,11 @@ void Client::viewReservations()
 
     if (!found)
     {
-        std::cout << "No reservations found for user " << username << ".\n";
+        cout << "No reservations found for user " << username << ".\n";
     }
 }
 
-Client::Client(const std::string &uname, const std::string &pass)
+Client::Client(const string &uname, const string &pass)
     : User(uname, pass, ""), manager()
 {
     manager.loadFlightsFromFile("data/flights.csv");
@@ -267,11 +265,11 @@ Client::Client(const std::string &uname, const std::string &pass)
 
 
 
-bool Client::login(const std::string &uname, const std::string &pass)
+bool Client::login(const string &uname, const string &pass)
 {
-    std::ifstream file("data/clients.txt");
-    std::string u, p;
-    std::string hashedInput = simpleHash(uname + pass); 
+    ifstream file("data/clients.txt");
+    string u, p;
+    string hashedInput = simpleHash(uname + pass); 
 
     while (file >> u >> p)
     {
@@ -311,22 +309,22 @@ void Client::viewAvailableFlights()
 }
 
 void Client::cancelBooking() {
-    std::ifstream in("data/reservations.csv");
-    std::vector<Reservation> allReservations;
-    std::map<std::string, std::vector<Reservation>> bookingsByDate;
+    ifstream in("data/reservations.csv");
+    vector<Reservation> allReservations;
+    map<string, vector<Reservation>> bookingsByDate;
 
-    std::string line;
-    while (std::getline(in, line)) {
-        std::stringstream ss(line);
-        std::string resID, uname, flightID, date, seatStr;
+    string line;
+    while (getline(in, line)) {
+        stringstream ss(line);
+        string resID, uname, flightID, date, seatStr;
 
-        std::getline(ss, resID, ',');
-        std::getline(ss, uname, ',');
-        std::getline(ss, flightID, ',');
-        std::getline(ss, date, ',');
-        std::getline(ss, seatStr, ',');
+        getline(ss, resID, ',');
+        getline(ss, uname, ',');
+        getline(ss, flightID, ',');
+        getline(ss, date, ',');
+        getline(ss, seatStr, ',');
 
-        Reservation r(resID, uname, flightID, date, std::stoi(seatStr));
+        Reservation r(resID, uname, flightID, date, stoi(seatStr));
         allReservations.push_back(r);
 
         if (uname == username) {
@@ -336,43 +334,43 @@ void Client::cancelBooking() {
     in.close();
 
     if (bookingsByDate.empty()) {
-        std::cout << "You have no bookings to cancel.\n";
+        cout << "You have no bookings to cancel.\n";
         return;
     }
 
     // Show date options
-    std::cout << "\nYour bookings by date:\n";
+    cout << "\nYour bookings by date:\n";
     int idx = 1;
-    std::vector<std::string> dateOptions;
+    vector<string> dateOptions;
     for (const auto& pair : bookingsByDate) {
-        std::cout << idx++ << ". " << pair.first << " (" << pair.second.size() << " ticket(s))\n";
+        cout << idx++ << ". " << pair.first << " (" << pair.second.size() << " ticket(s))\n";
         dateOptions.push_back(pair.first);
     }
 
     int dateChoice;
-    std::cout << "Choose a date to cancel tickets from: ";
-    std::cin >> dateChoice;
+    cout << "Choose a date to cancel tickets from: ";
+    cin >> dateChoice;
 
     if (dateChoice < 1 || dateChoice > dateOptions.size()) {
-        std::cout << "Invalid choice.\n";
+        cout << "Invalid choice.\n";
         return;
     }
 
-    std::string selectedDate = dateOptions[dateChoice - 1];
+    string selectedDate = dateOptions[dateChoice - 1];
     int maxCancellable = bookingsByDate[selectedDate].size();
 
-    std::cout << "You have " << maxCancellable << " ticket(s) on " << selectedDate << ".\n";
+    cout << "You have " << maxCancellable << " ticket(s) on " << selectedDate << ".\n";
     int cancelCount;
-    std::cout << "How many would you like to cancel? ";
-    std::cin >> cancelCount;
+    cout << "How many would you like to cancel? ";
+    cin >> cancelCount;
 
     if (cancelCount <= 0 || cancelCount > maxCancellable) {
-        std::cout << "Invalid number.\n";
+        cout << "Invalid number.\n";
         return;
     }
 
     // Begin cancellation
-    std::ofstream out("data/reservations.csv.tmp");
+    ofstream out("data/reservations.csv.tmp");
     int cancelled = 0;
 
     for (const auto& r : allReservations) {
@@ -389,11 +387,11 @@ void Client::cancelBooking() {
     }
 
     out.close();
-    std::remove("data/reservations.csv");
-    std::rename("data/reservations.csv.tmp", "data/reservations.csv");
+    remove("data/reservations.csv");
+    rename("data/reservations.csv.tmp", "data/reservations.csv");
 
     manager.saveFlightsToFile("data/flights.csv");
 
-    std::cout << "✅ " << cancelled << " booking(s) cancelled successfully.\n";
+    cout << "✅ " << cancelled << " booking(s) cancelled successfully.\n";
 }
 

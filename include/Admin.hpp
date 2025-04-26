@@ -4,14 +4,16 @@
 #include "User.hpp"
 #include "FlightManager.hpp"
 
+using namespace std;
+
 class Admin : public User {
 private:
     FlightManager manager;
 
 public:
-    Admin(const std::string& uname = "", const std::string& pass = "", const std::string& mail = "");
+    Admin(const string& uname = "", const string& pass = "", const string& mail = "");
 
-    bool login(const std::string& uname, const std::string& pass) override;
+    bool login(const string& uname, const string& pass) override;
     void logout() override;
 
     void addFlight();

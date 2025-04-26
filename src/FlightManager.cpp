@@ -90,32 +90,32 @@ void FlightManager::displayAllFlights() const
 {
     if (flights.empty())
     {
-        std::cout << "No flights available.\n";
+        cout << "No flights available.\n";
         return;
     }
 
     // Print table header
-    std::cout << std::left
-              << std::setw(12) << "Flight ID"
-              << std::setw(15) << "Origin"
-              << std::setw(15) << "Destination"
-              << std::setw(20) << "Departure Time"
-              << std::setw(20) << "Arrival Time"
-              << std::setw(15) << "Total Seats"
+    cout << left
+              << setw(12) << "Flight ID"
+              << setw(15) << "Origin"
+              << setw(15) << "Destination"
+              << setw(20) << "Departure Time"
+              << setw(20) << "Arrival Time"
+              << setw(15) << "Total Seats"
               << "\n";
 
-    std::cout << std::string(97, '-') << "\n";
+    cout << string(97, '-') << "\n";
 
     // Print each flight row
     for (const auto &flight : flights)
     {
-        std::cout << std::left
-                  << std::setw(12) << flight.getFlightID()
-                  << std::setw(15) << flight.getOrigin()
-                  << std::setw(15) << flight.getDestination()
-                  << std::setw(20) << flight.getDeparatureTime()
-                  << std::setw(20) << flight.getArrivalTime()
-                  << std::setw(15) << flight.getTotalSeats()
+        cout << left
+                  << setw(12) << flight.getFlightID()
+                  << setw(15) << flight.getOrigin()
+                  << setw(15) << flight.getDestination()
+                  << setw(20) << flight.getDeparatureTime()
+                  << setw(20) << flight.getArrivalTime()
+                  << setw(15) << flight.getTotalSeats()
                   << "\n";
     }
 }
