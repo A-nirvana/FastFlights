@@ -15,6 +15,7 @@ void adminMenu(Admin &admin)
         cout << "4. View Bookings\n";
         cout << "5. View All Flights from an Origin\n";
         cout << "6. View All Flights\n";
+        cout << "7. Export Bookings report\n";
         cout << "0. Logout\n";
         cout << "Enter choice: ";
         cin >> choice;
@@ -38,6 +39,9 @@ void adminMenu(Admin &admin)
             break;
         case 6:
             admin.viewAllFlights();
+            break;
+        case 7:
+            admin.exportBookingsReport();
             break;
         case 0:
             admin.logout();

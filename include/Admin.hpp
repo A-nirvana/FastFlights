@@ -22,6 +22,7 @@ public:
     void viewBookings(); 
     void viewAllFlights(); 
     void viewFlightFromAnOrigin();
+    void exportBookingsReport();
 };
 
 #endif
