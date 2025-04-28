@@ -7,6 +7,8 @@
 #include <iomanip> // for setw, setfill
 #include <chrono>
 #include <ctime>
+#include <set>
+#include <limits>
 
 string getFormattedDateInput()
 {
@@ -19,7 +21,7 @@ string getFormattedDateInput()
     cin >> month;
     if (month < 1 || month > 12)
     {
-        cout << "❌ Invalid month entered.\n";
+        cout << " Invalid month entered.\n";
         return "";
     }
 
@@ -48,7 +50,7 @@ string getFormattedDateInput()
 
     if (inputDate < minDate)
     {
-        cout << "❌ Booking not allowed for today or past dates. Earliest allowed: " << minDate << "\n";
+        cout << " Booking not allowed for today or past dates. Earliest allowed: " << minDate << "\n";
         return "";
     }
 
@@ -67,7 +69,7 @@ void printTicket(const Reservation& res, const Flight& flight, bool pause = true
     cout << " Departure Time : " << flight.getDeparatureTime() << "\n";
     cout << " Seat Number    : " << res.getSeatNumber() << "\n";
     cout << "===========================================\n";
-    cout << "     ✅ Please arrive 45 mins early.\n";
+    cout << "      Please arrive 45 mins early.\n";
     cout << "===========================================\n";
 
     if (pause) {
@@ -136,63 +138,89 @@ void Client::bookFlight()
     cin >> from;
     cout << "To: ";
     cin >> to;
-
+    
     string date = getFormattedDateInput();
     if (date.empty())
         return;
-
+    
     vector<const Flight *> matches;
     bool found = manager.displayFlightsFromOriginToDestinationSorted(from, to, date);
-
-   
-
+    
     if (!found)
     {
-        cout << "No flights found.\n";
+        cout << "\n No flights found for the given route and date.\n";
         return;
     }
-
+    
     string flightID;
     cout << "\nEnter Flight ID to book: ";
     cin >> flightID;
-
+    
     Flight *selected = manager.getFlightByID(flightID);
     if (!selected)
     {
-        cout << "Invalid flight ID.\n";
+        cout << " Invalid flight ID.\n";
         return;
     }
-
+    
     int available = selected->getAvailableSeatsOnDate(date);
     if (available == 0)
     {
-        cout << "No seats available on this date.\n";
+        cout << " No seats available on this date.\n";
         return;
     }
-
+    
     int seatCount;
     cout << "How many seats would you like to book? (Max 5): ";
     cin >> seatCount;
-
+    
     if (seatCount < 1 || seatCount > 5)
     {
-        cout << "❌ Invalid number of seats.\n";
+        cout << " Invalid number of seats requested.\n";
         return;
     }
-
+    
     if (seatCount > available)
     {
-        cout << "❌ Only " << available << " seat(s) available on this date.\n";
+        cout << " Only " << available << " seat(s) available on this date.\n";
         return;
     }
-
+    
+    // 🧮 Calculate and Show Total Price BEFORE Booking
+    float totalPrice = seatCount * selected->getPrice();
+    
+    cout << "\n===========================================\n";
+    cout << " 🛒 Booking Summary\n";
+    cout << "-------------------------------------------\n";
+    cout << " From: " << from << "\n";
+    cout << " To: " << to << "\n";
+    cout << " Date: " << date << "\n";
+    cout << " Flight ID: " << selected->getFlightID() << "\n";
+    cout << " Seats: " << seatCount << "\n";
+    cout << " Total Price: ₹" << fixed << setprecision(2) << totalPrice << "\n";
+    cout << "===========================================\n";
+    
+    char confirm;
+    cout << "Do you want to proceed with the booking? (Y/N): ";
+    cin >> confirm;
+    
+    if (confirm != 'Y' && confirm != 'y')
+    {
+        cout << "\n❗ Booking canceled. Returning to main menu.\n";
+        cout << "Press Enter to continue...";
+        cin.ignore();
+        cin.get();
+        return;
+    }
+    
+    //  Proceed to actually book tickets
     ofstream out("data/reservations.csv", ios::app);
     if (!out)
     {
-        cout << "Could not open reservations file.\n";
+        cout << " Could not open reservations file.\n";
         return;
     }
-
+    
     for (int i = 0; i < seatCount; ++i)
     {
         int seatNumber = selected->assignSeatOnDate(date);
@@ -201,12 +229,13 @@ void Client::bookFlight()
         out << res.toCSV() << "\n";
         printTicket(res, *selected, false); // no pause between tickets
     }
-
+    
     out.close();
     manager.saveFlightsToFile("data/flights.csv");
-
-    cout << "\n✅ " << seatCount << " ticket(s) booked successfully.\n";
-    cout << "Press Enter to continue...";
+    
+    cout << "\n " << seatCount << " ticket(s) booked successfully!\n";
+    cout << "Thank you for choosing FastFlights\n";
+    cout << "\nPress Enter to continue...";
     cin.ignore();
     cin.get();
 }
@@ -284,9 +313,9 @@ void Client::searchFlights()
     cin >> from;
     cout << "To: ";
     cin >> to;
-    cout<<"Date (YYYY-MM-DD): ";
-    string date;
-    cin >> date;
+    string date = getFormattedDateInput();
+    if (date.empty())
+        return;
 
     cout << "Matching Flights:\n";
     bool found = manager.displayFlightsFromOriginToDestinationSorted(from, to, date);
@@ -309,89 +338,133 @@ void Client::viewAvailableFlights()
 }
 
 void Client::cancelBooking() {
-    ifstream in("data/reservations.csv");
-    vector<Reservation> allReservations;
-    map<string, vector<Reservation>> bookingsByDate;
+    // 1. Load all reservations and group by date
+    std::ifstream in("data/reservations.csv");
+    std::vector<Reservation> allReservations;
+    std::map<std::string, std::vector<Reservation>> bookingsByDate;
 
-    string line;
-    while (getline(in, line)) {
-        stringstream ss(line);
-        string resID, uname, flightID, date, seatStr;
-
-        getline(ss, resID, ',');
-        getline(ss, uname, ',');
-        getline(ss, flightID, ',');
-        getline(ss, date, ',');
-        getline(ss, seatStr, ',');
-
-        Reservation r(resID, uname, flightID, date, stoi(seatStr));
+    std::string line;
+    while (std::getline(in, line)) {
+        std::stringstream ss(line);
+        std::string resID, uname, flightID, date, seatStr;
+        std::getline(ss, resID, ',');
+        std::getline(ss, uname, ',');
+        std::getline(ss, flightID, ',');
+        std::getline(ss, date, ',');
+        std::getline(ss, seatStr, ',');
+        Reservation r(resID, uname, flightID, date, std::stoi(seatStr));
         allReservations.push_back(r);
-
-        if (uname == username) {
+        if (uname == username)
             bookingsByDate[date].push_back(r);
-        }
     }
     in.close();
 
     if (bookingsByDate.empty()) {
-        cout << "You have no bookings to cancel.\n";
+        std::cout << "\n❌ You have no bookings to cancel.\n";
         return;
     }
 
-    // Show date options
-    cout << "\nYour bookings by date:\n";
+    // 2. Let user pick a date
+    std::cout << "\n📅 Your Bookings by Date:\n";
     int idx = 1;
-    vector<string> dateOptions;
-    for (const auto& pair : bookingsByDate) {
-        cout << idx++ << ". " << pair.first << " (" << pair.second.size() << " ticket(s))\n";
-        dateOptions.push_back(pair.first);
+    std::vector<std::string> dateOptions;
+    for (auto& p : bookingsByDate) {
+        std::cout << idx << ". " << p.first << " (" << p.second.size() << " ticket(s))\n";
+        dateOptions.push_back(p.first);
+        ++idx;
     }
 
     int dateChoice;
-    cout << "Choose a date to cancel tickets from: ";
-    cin >> dateChoice;
-
-    if (dateChoice < 1 || dateChoice > dateOptions.size()) {
-        cout << "Invalid choice.\n";
+    std::cout << "\nChoose a date to view bookings for cancellation: ";
+    std::cin >> dateChoice;
+    if (dateChoice < 1 || dateChoice > (int)dateOptions.size()) {
+        std::cout << "\n❌ Invalid date selection.\n";
         return;
     }
 
-    string selectedDate = dateOptions[dateChoice - 1];
-    int maxCancellable = bookingsByDate[selectedDate].size();
+    // 3. Build the list of reservations on that date
+    std::string selectedDate = dateOptions[dateChoice - 1];
+    auto& reservationsOnDate = bookingsByDate[selectedDate];
 
-    cout << "You have " << maxCancellable << " ticket(s) on " << selectedDate << ".\n";
-    int cancelCount;
-    cout << "How many would you like to cancel? ";
-    cin >> cancelCount;
+    // 4. Display them in a numbered table
+    std::cout << "\n===============================================\n";
+    std::cout << std::left
+              << std::setw(5)  << "No."
+              << std::setw(15) << "Flight ID"
+              << std::setw(15) << "Origin"
+              << std::setw(15) << "Destination"
+              << std::setw(15) << "Seat No." << "\n";
+    std::cout << "-----------------------------------------------\n";
 
-    if (cancelCount <= 0 || cancelCount > maxCancellable) {
-        cout << "Invalid number.\n";
+    for (int i = 0; i < (int)reservationsOnDate.size(); ++i) {
+        auto& res = reservationsOnDate[i];
+        Flight* f = manager.getFlightByID(res.getFlightID());
+        if (f) {
+            std::cout << std::left
+                      << std::setw(5)  << (i+1)
+                      << std::setw(15) << f->getFlightID()
+                      << std::setw(15) << f->getOrigin()
+                      << std::setw(15) << f->getDestination()
+                      << std::setw(15) << res.getSeatNumber() << "\n";
+        }
+    }
+    std::cout << "===============================================\n";
+
+    // 5. Read user’s list of ticket-numbers to cancel
+    std::cout << "\nEnter the numbers of the tickets you want to cancel (e.g. 1 3 4): ";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::string inputLine;
+    std::getline(std::cin, inputLine);
+    std::stringstream ss(inputLine);
+    std::set<int> toCancel;
+    int num;
+    while (ss >> num) {
+        if (num < 1 || num > (int)reservationsOnDate.size()) {
+            std::cout << "\n❌ Invalid ticket number: " << num << ". Operation aborted.\n";
+            return;
+        }
+        toCancel.insert(num-1);  // zero-based index
+    }
+    if (toCancel.empty()) {
+        std::cout << "\n❌ No valid tickets selected.\n";
         return;
     }
 
-    // Begin cancellation
-    ofstream out("data/reservations.csv.tmp");
+    // 6. Perform cancellation by reservationID
+    std::ofstream out("data/reservations.csv.tmp");
     int cancelled = 0;
 
-    for (const auto& r : allReservations) {
-        if (r.getClientUsername() == username && r.getDate() == selectedDate && cancelled < cancelCount) {
-            // Cancel this one
-            Flight* f = manager.getFlightByID(r.getFlightID());
-            if (f) {
-                f->cancelSeatOnDate(r.getDate(), r.getSeatNumber());
+    for (auto& r : allReservations) {
+        bool cancelThis = false;
+        if (r.getClientUsername() == username && r.getDate() == selectedDate) {
+            // check if this reservation’s index (in reservationsOnDate) was selected
+            for (int idx : toCancel) {
+                if (reservationsOnDate[idx].getReservationID() == r.getReservationID()) {
+                    cancelThis = true;
+                    break;
+                }
             }
-            cancelled++;
-            continue;
         }
-        out << r.toCSV() << "\n";
+        if (cancelThis) {
+            Flight* f = manager.getFlightByID(r.getFlightID());
+            if (f) f->cancelSeatOnDate(r.getDate(), r.getSeatNumber());
+            ++cancelled;
+        } else {
+            out << r.toCSV() << "\n";
+        }
     }
-
     out.close();
-    remove("data/reservations.csv");
-    rename("data/reservations.csv.tmp", "data/reservations.csv");
 
+    // 7. Replace file and persist flights
+    std::remove("data/reservations.csv");
+    std::rename("data/reservations.csv.tmp", "data/reservations.csv");
     manager.saveFlightsToFile("data/flights.csv");
 
-    cout << "✅ " << cancelled << " booking(s) cancelled successfully.\n";
+    std::cout << "\n✅ " << cancelled << " booking(s) cancelled successfully!\n";
+    std::cout << "Press Enter to continue...";
+    std::cin.get();
 }
+
+
+
 
