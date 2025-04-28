@@ -1,3 +1,22 @@
-IND-001,Guwahati,Goa,14:00,19:00, hours,300,300,5000
-IND-002,Guwahati,Delhi,12:20,16:20,hours,300,300,5000
+IND-001,Guwahati,Goa,14:00,19:00,5 hours,300,300,5000
+IND-002,Guwahati,Delhi,12:20,16:20,6 hours,300,300,5000
 IND-004,Delhi,Guwahati,8:00,12:00,4 hours,300,300,6000
+IND-005,Mumbai,Bangalore,09:00,11:00,2 hours,200,200,4000
+IND-006,Chennai,Kolkata,13:30,17:00,3.5 hours,250,250,4500
+IND-007,Bangalore,Hyderabad,15:45,17:15,1.5 hours,180,180,3500
+IND-008,Kolkata,Mumbai,06:00,09:30,3.5 hours,220,220,4800
+IND-009,Hyderabad,Delhi,20:00,23:00,3 hours,270,270,5200
+IND-010,Pune,Chennai,10:30,13:30,3 hours,210,210,4300
+IND-011,Delhi,Mumbai,07:00,09:00,2 hours,250,250,4700
+IND-012,Mumbai,Delhi,18:00,20:00,2 hours,250,250,4700
+IND-013,Guwahati,Kolkata,07:00,08:30,1.5 hours,180,180,3000
+JET-014,Delhi,Mumbai,06:00,08:00,2 hours,200,200,4600
+AIR-015,Delhi,Mumbai,10:00,12:00,2 hours,220,220,4800
+SPC-016,Delhi,Mumbai,16:00,18:00,2 hours,250,250,5000
+IND-017,Mumbai,Delhi,14:00,16:00,2 hours,250,250,4700
+IND-018,Delhi,Chennai,12:00,14:00,2 hours,230,230,4500
+IND-019,Chennai,Mumbai,15:00,17:00,2 hours,240,240,4600
+IND-020,Mumbai,Delhi,19:00,21:00,2 hours,250,250,4700
+IND-021,Delhi,Hyderabad,11:00,13:00,2 hours,220,220,4400
+IND-022,Hyderabad,Mumbai,17:00,19:00,2 hours,230,230,4500
+
