@@ -1,3 +1,5 @@
+// All admin member variables and functions have been declared here
+
 #ifndef ADMIN_HPP
 #define ADMIN_HPP
 

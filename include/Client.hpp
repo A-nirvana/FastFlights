@@ -1,3 +1,5 @@
+// All client member variables and functions have been declared here
+
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 

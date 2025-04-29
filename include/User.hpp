@@ -1,3 +1,7 @@
+// User class is the base class for both Admin and Client classes. 
+//It contains the common attributes and methods that are shared between the two types of users.
+// The User class is not intended to be instantiated directly, but rather serves as a base class for more specific user types.
+
 #ifndef USER_HPP
 #define USER_HPP
 

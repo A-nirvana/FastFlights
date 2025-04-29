@@ -1,3 +1,4 @@
+// This is the header file for the Flight class, which represents a flight with various attributes and methods to manage seat bookings.
 #ifndef FLIGHT_HPP
 #define FLIGHT_HPP
 

@@ -1,3 +1,5 @@
+// this file defines the FlightManager class, which manages a collection of flights.
+// it has functions to help load, save, add, remove, and display flights, as well as check for schedule conflicts and sort flights based on different criteria.
 #ifndef FLIGHTMANAGER_HPP
 #define FLIGHTMANAGER_HPP
 
